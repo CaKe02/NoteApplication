@@ -2,6 +2,7 @@ package jp.ac.seiko.kito.noteapplication.RecyclerView;
 
 public class DataModel {
     private String mTitle;
+    private String mTitleId;
 
     public String getTitle() {
         return mTitle;
@@ -9,5 +10,13 @@ public class DataModel {
 
     public void setTitle(String mTitle) {
         this.mTitle = mTitle;
+    }
+
+    public String getTitleId() {
+        return mTitleId;
+    }
+
+    public void setTitleId(String mTitleId) {
+        this.mTitleId = mTitleId;
     }
 }

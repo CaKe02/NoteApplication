@@ -1,11 +1,13 @@
 package jp.ac.seiko.kito.noteapplication.Fragments;
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -23,32 +25,26 @@ import jp.ac.seiko.kito.noteapplication.RecyclerView.RVAdapter;
 public class MainFragment extends Fragment implements View.OnClickListener, RVAdapter.OnItemClickListener {
 
     private Button mButtonCreate;
+    private TextView mTextViewTitleId;
     private LinearLayout mLinearLayoutTitle;
     RecyclerView mRecyclerViewList;
 
     private final static String KEY_FIGURE = "figure";
     private int mAmount = 0;
+    private int mFigure = 0;
 
 
 
-    NoteDataBaseHelper mNoteDataBaseHelper = new NoteDataBaseHelper(getContext());
 
-    public static MainFragment newInstance(int figure) {
+
+    public static MainFragment newInstance() {
         MainFragment fragment = new MainFragment();
-        Bundle args = new Bundle();
-        args.putInt(KEY_FIGURE, figure);
-        fragment.setArguments(args);
-
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        if (args != null) {
-            mAmount = args.getInt(KEY_FIGURE, 0);
-        }
     }
 
     @Override
@@ -60,28 +56,47 @@ public class MainFragment extends Fragment implements View.OnClickListener, RVAd
 
     private void init(View view) {
         mButtonCreate = view.findViewById(R.id.button_create);
+        mTextViewTitleId = view.findViewById(R.id.textView_titleId);
         mRecyclerViewList = view.findViewById(R.id.recyclerView_main);
         mLinearLayoutTitle = view.findViewById(R.id.linearLayout_title);
 
         mButtonCreate.setOnClickListener(this);
 
 
+
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         mRecyclerViewList.setHasFixedSize(false);
         mRecyclerViewList.setLayoutManager(manager);
 
-        if (mAmount > 0) {
-            mRecyclerViewList.setAdapter(new RVAdapter(createData()));
+        NoteDataBaseHelper noteDB = new NoteDataBaseHelper(getContext());
+        List<Integer> list = noteDB.getAllID(1);
+        try {
+            mAmount = list.size();
+        } catch (Exception e) {
+
         }
+
+        if (mAmount > 0) {
+
+            RVAdapter adapter = new RVAdapter(createData());
+            adapter.setOnItemClickListener(this);
+            mRecyclerViewList.setAdapter(adapter);
+        }
+
+
     }
 
     public List<DataModel> createData() {
+        NoteDataBaseHelper noteDB = new NoteDataBaseHelper(getContext());
+        List<Integer> idList = noteDB.getAllID(1);
         List<DataModel> resultData = new ArrayList<>();
         for (int i = 1; i <= mAmount; i++) {
             DataModel row = new DataModel();
-            String note[] = mNoteDataBaseHelper.getNoteByID(String.valueOf(i));
+            String note[] = noteDB.getNoteByID(idList.get(i-1));
             String title = note[0];
-            row.setTitle(title + i);
+            row.setTitle(title);
+
+            row.setTitleId(String.valueOf(idList.get(i-1)));
             resultData.add(row);
         }
         return resultData;
@@ -90,9 +105,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, RVAd
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.button_create) {
-            mButtonCreate.setText("hey");
-
-            EditingFragment fragment = EditingFragment.newInstance(mAmount); // 遷移先
+            EditingFragment fragment = EditingFragment.newInstance(0,null,null,0); // 遷移先
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.linearLayout_container, fragment);
             fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
@@ -101,6 +114,25 @@ public class MainFragment extends Fragment implements View.OnClickListener, RVAd
     }
 
     @Override
-    public void onItemClick(String name) {
+    public void onItemClick(String id, int isDeleteButton) {
+        NoteDataBaseHelper noteDB = new NoteDataBaseHelper(getContext());
+        if (isDeleteButton == 0) {
+            int titleId = Integer.parseInt(id);
+            String title = noteDB.getNoteByID(titleId)[0];
+            String body = noteDB.getNoteByID(titleId)[1];
+            EditingFragment fragment = EditingFragment.newInstance(titleId, title, body, 1); // 遷移先
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.linearLayout_container, fragment);
+            fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
+            fragmentTransaction.commit();
+        } else {
+            noteDB.deleteProject(id);
+            MainFragment mainFragment = MainFragment.newInstance();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.linearLayout_container, mainFragment);
+            fragmentTransaction.addToBackStack(mainFragment.getClass().getSimpleName());
+            fragmentTransaction.commit();
+        }
+
     }
 }

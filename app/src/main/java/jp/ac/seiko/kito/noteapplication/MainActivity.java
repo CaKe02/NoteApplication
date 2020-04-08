@@ -23,14 +23,10 @@ public class MainActivity extends AppCompatActivity {
     }
     private void init() {
         mLinearLayoutC = findViewById(R.id.linearLayout_container);
-        MainFragment mainFragment = MainFragment.newInstance(0);
-        EditingFragment editingFragment = EditingFragment.newInstance(0);
+        MainFragment mainFragment = MainFragment.newInstance();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.linearLayout_container, editingFragment);
-        fragmentTransaction.add(R.id.linearLayout_container, mainFragment);
+        fragmentTransaction.replace(R.id.linearLayout_container, mainFragment);
         fragmentTransaction.addToBackStack(mainFragment.getClass().getSimpleName());
-        fragmentTransaction.addToBackStack(editingFragment.getClass().getSimpleName());
-        fragmentTransaction.hide(editingFragment);
         fragmentTransaction.commit();
 
     }

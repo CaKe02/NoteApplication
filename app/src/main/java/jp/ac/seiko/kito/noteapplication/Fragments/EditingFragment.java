@@ -16,24 +16,30 @@ import jp.ac.seiko.kito.noteapplication.R;
 
 public class EditingFragment extends Fragment implements View.OnClickListener {
 
+    private int mTitleId;
     private String mTitleText;
     private String mBodyText;
+    private int mIsEditing;
 
     private Button mButtonDone;
     private Button mButtonCancel;
     private EditText mEditTextTitle;
     private EditText mEditTextBody;
 
+    private final static String KEY_TITLEID = "titleId";
+    private final static String KEY_TITLE = "title";
+    private final static String KEY_BODY = "body";
+    private final static String KEY_ISEDITING = "isEditing";
 
-    private final static String KEY_FIGURE = "figure";
-    private int mFigure = 0;
 
 
-
-    public static EditingFragment newInstance(int figure) {
+    public static EditingFragment newInstance(int id, String title, String body, int isEditing) {
         EditingFragment fragment = new EditingFragment();
         Bundle args = new Bundle();
-        args.putInt(KEY_FIGURE, figure);
+        args.putInt(KEY_TITLEID, id);
+        args.putString(KEY_TITLE, title);
+        args.putString(KEY_BODY, body);
+        args.putInt(KEY_ISEDITING, isEditing);
         fragment.setArguments(args);
 
         return fragment;
@@ -44,7 +50,10 @@ public class EditingFragment extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            mFigure = args.getInt(KEY_FIGURE, 0);
+            mTitleId = args.getInt(KEY_TITLEID, 0);
+            mTitleText = args.getString(KEY_TITLE);
+            mBodyText = args.getString(KEY_BODY);
+            mIsEditing = args.getInt(KEY_ISEDITING, 0);
         }
     }
 
@@ -62,6 +71,11 @@ public class EditingFragment extends Fragment implements View.OnClickListener {
         mEditTextBody = v.findViewById(R.id.editText_body);
         mButtonDone.setOnClickListener(this);
         mButtonCancel.setOnClickListener(this);
+
+        if (mIsEditing == 1) {
+            mEditTextTitle.setText(mTitleText);
+            mEditTextBody.setText(mBodyText);
+        }
     }
 
 
@@ -74,16 +88,19 @@ public class EditingFragment extends Fragment implements View.OnClickListener {
                 NoteDataBaseHelper noteDB = new NoteDataBaseHelper(getContext());
                 mTitleText = mEditTextTitle.getText().toString();
                 mBodyText = mEditTextBody.getText().toString();
-                noteDB.addProject(mTitleText,mBodyText,"1");
-
-                MainFragment fragmentDone = MainFragment.newInstance(mFigure + 1); // 遷移先
+                if (mIsEditing == 1) {
+                  noteDB.updateColumns(mTitleId,mTitleText,mBodyText);
+                } else {
+                    noteDB.addProject(mTitleText, mBodyText, 1);
+                }
+                MainFragment fragmentDone = MainFragment.newInstance(); // 遷移先
                 FragmentTransaction fragmentTransactionDone = getFragmentManager().beginTransaction();
                 fragmentTransactionDone.replace(R.id.linearLayout_container, fragmentDone);
                 fragmentTransactionDone.addToBackStack(fragmentDone.getClass().getSimpleName());
                 fragmentTransactionDone.commit();
                 break;
             case R.id.button_cancel:
-                MainFragment fragmentCancel = MainFragment.newInstance(mFigure); // 遷移先
+                MainFragment fragmentCancel = MainFragment.newInstance(); // 遷移先
                 FragmentTransaction fragmentTransactionCancel = getFragmentManager().beginTransaction();
                 fragmentTransactionCancel.replace(R.id.linearLayout_container, fragmentCancel);
                 fragmentTransactionCancel.addToBackStack(fragmentCancel.getClass().getSimpleName());
