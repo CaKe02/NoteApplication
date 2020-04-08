@@ -32,19 +32,18 @@
 
             <Button
                 android:id="@+id/button_cancel"
-                android:layout_width="80dp"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:text="Cancel" />
-
-            <Space
-                android:layout_width="12dp"
-                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/button_done"
-                android:layout_width="80dp"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:text="完了" />
+                android:background="@android:color/transparent"
+                android:text="完了"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
