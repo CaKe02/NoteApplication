@@ -12,12 +12,12 @@ import java.util.List;
 import jp.ac.seiko.kito.noteapplication.R;
 
 
-public class RVAdapter extends RecyclerView.Adapter<ViewHolder> {
-    private List<DataModel> list;
+public class RVAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
+    private List<RowDataModel> list;
 
     private OnItemClickListener mListener;
 
-    public RVAdapter(List<DataModel> list) {
+    public RVAdapter(List<RowDataModel> list) {
         this.list = list;
     }
 
@@ -27,13 +27,13 @@ public class RVAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_row, parent, false);
-        return new ViewHolder(inflate);
+        return new RecyclerViewHolder(inflate);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewHolder holder, final int position) {
         holder.mTextViewTitle.setText(list.get(position).getTitle());
         holder.mTextViewTitleId.setText(list.get(position).getTitleId());
         holder.mLinearLayoutTitle.setOnClickListener(new View.OnClickListener() {

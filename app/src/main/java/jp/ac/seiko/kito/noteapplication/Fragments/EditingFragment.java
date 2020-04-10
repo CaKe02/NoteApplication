@@ -85,6 +85,7 @@ public class EditingFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_done:
+                if (!mEditTextTitle.getText().toString().equals("")) {
                 NoteDataBaseHelper noteDB = new NoteDataBaseHelper(getContext());
                 mTitleText = mEditTextTitle.getText().toString();
                 mBodyText = mEditTextBody.getText().toString();
@@ -98,6 +99,7 @@ public class EditingFragment extends Fragment implements View.OnClickListener {
                 fragmentTransactionDone.replace(R.id.linearLayout_container, fragmentDone);
                 fragmentTransactionDone.addToBackStack(fragmentDone.getClass().getSimpleName());
                 fragmentTransactionDone.commit();
+                }
                 break;
             case R.id.button_cancel:
                 MainFragment fragmentCancel = MainFragment.newInstance(); // 遷移先

@@ -1,6 +1,6 @@
 package jp.ac.seiko.kito.noteapplication.RecyclerView;
 
-public class DataModel {
+public class RowDataModel {
     private String mTitle;
     private String mTitleId;
 

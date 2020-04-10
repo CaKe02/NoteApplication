@@ -10,13 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import jp.ac.seiko.kito.noteapplication.R;
 
-public class ViewHolder extends RecyclerView.ViewHolder {
+public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     public TextView mTextViewTitle;
     public TextView mTextViewTitleId;
     public Button mButtonDelete;
     public LinearLayout mLinearLayoutTitle;
 
-    public ViewHolder(@NonNull View itemView) {
+    public RecyclerViewHolder(@NonNull View itemView) {
         super(itemView);
         mTextViewTitle = itemView.findViewById(R.id.textView_title);
         mTextViewTitleId = itemView.findViewById(R.id.textView_titleId);

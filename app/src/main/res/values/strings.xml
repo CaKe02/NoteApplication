@@ -2,5 +2,13 @@
     <string name="app_name">NoteApplication</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="main_button_create">+</string>
+
+    <string name="editing_text_title">タイトル名</string>
+    <string name="editing_text_body">内容</string>
+    <string name="editing_button_cancel">Cancel</string>
+    <string name="editing_button_done">完了</string>
+
+    <string name="row_button_delete">×</string>
+
 </resources>

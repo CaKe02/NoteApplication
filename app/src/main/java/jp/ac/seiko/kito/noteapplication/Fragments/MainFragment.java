@@ -1,7 +1,6 @@
 package jp.ac.seiko.kito.noteapplication.Fragments;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ import java.util.List;
 
 import jp.ac.seiko.kito.noteapplication.DataBase.NoteDataBaseHelper;
 import jp.ac.seiko.kito.noteapplication.R;
-import jp.ac.seiko.kito.noteapplication.RecyclerView.DataModel;
+import jp.ac.seiko.kito.noteapplication.RecyclerView.RowDataModel;
 import jp.ac.seiko.kito.noteapplication.RecyclerView.RVAdapter;
 
 public class MainFragment extends Fragment implements View.OnClickListener, RVAdapter.OnItemClickListener {
@@ -86,12 +85,12 @@ public class MainFragment extends Fragment implements View.OnClickListener, RVAd
 
     }
 
-    public List<DataModel> createData() {
+    public List<RowDataModel> createData() {
         NoteDataBaseHelper noteDB = new NoteDataBaseHelper(getContext());
         List<Integer> idList = noteDB.getAllID(1);
-        List<DataModel> resultData = new ArrayList<>();
+        List<RowDataModel> resultData = new ArrayList<>();
         for (int i = 1; i <= mAmount; i++) {
-            DataModel row = new DataModel();
+            RowDataModel row = new RowDataModel();
             String note[] = noteDB.getNoteByID(idList.get(i-1));
             String title = note[0];
             row.setTitle(title);
